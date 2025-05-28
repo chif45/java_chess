@@ -1,5 +1,6 @@
 package com.mycompany.chess;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,6 +9,7 @@ import javax.swing.ButtonGroup;
 public class Chess extends javax.swing.JFrame {
 
     public Chess() {
+        this.getContentPane().setBackground(Color.decode("#cad5be"));
         initComponents();
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(WhiteButton);
@@ -31,7 +33,10 @@ public class Chess extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(127, 151, 101));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
+        jButton1.setBackground(new java.awt.Color(114, 135, 107));
         jButton1.setText("Новая партия");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -39,6 +44,7 @@ public class Chess extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(114, 135, 107));
         jButton2.setText("присоединиться");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -64,6 +70,7 @@ public class Chess extends javax.swing.JFrame {
 
         jLabel3.setText("Port:");
 
+        BlackButton.setBackground(new java.awt.Color(202, 213, 190));
         BlackButton.setText("Чёрные");
         BlackButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -71,6 +78,7 @@ public class Chess extends javax.swing.JFrame {
             }
         });
 
+        WhiteButton.setBackground(new java.awt.Color(202, 213, 190));
         WhiteButton.setText("Белые");
         WhiteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -78,6 +86,7 @@ public class Chess extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setBackground(new java.awt.Color(114, 135, 107));
         jButton3.setText("Играть на 1 ПК");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -169,7 +178,6 @@ public class Chess extends javax.swing.JFrame {
                 Logger.getLogger(Chess.class.getName()).log(Level.SEVERE, null, ex);
             }
         gameWindow.setVisible(true);
-        this.dispose(); 
     }
     }//GEN-LAST:event_jButton1ActionPerformed
 

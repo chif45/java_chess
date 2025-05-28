@@ -1,4 +1,8 @@
 package com.mycompany.chess;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
@@ -10,8 +14,10 @@ import javax.swing.SwingUtilities;
 public class chessWindow extends javax.swing.JFrame {
 
     public chessWindow(String userName, Boolean isWhiteChoosen) throws IOException {
+        this.getContentPane().setBackground(Color.decode("#cad5be"));
         isWhite = isWhiteChoosen;
         board = new Board(isWhite);
+        board.isGameOver = true;
         initComponents();
         jLabel7.setText("Вы: " + userName);
         jLabel3.setText("IP: " + getLocalIP());
@@ -21,13 +27,14 @@ public class chessWindow extends javax.swing.JFrame {
             public void onClientInfoReceived(String clientNickname) {
                 SwingUtilities.invokeLater(() -> {
                     jLabel2.setText(clientNickname); 
+                    board.isGameOver = false;
                 });
             }
         };
         server.start();
         board.setServer(server);
         System.out.println("The server is running on port 8080");
-
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -40,10 +47,12 @@ public class chessWindow extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(202, 213, 190));
+
+        jPanel1.setBackground(new java.awt.Color(202, 213, 190));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -64,6 +73,7 @@ public class chessWindow extends javax.swing.JFrame {
 
         jLabel7.setText("jLabel7");
 
+        jButton1.setBackground(new java.awt.Color(114, 135, 107));
         jButton1.setText("Сдаться");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -71,14 +81,7 @@ public class chessWindow extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Предложить ничью");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("Port:8080");
+        jLabel4.setText("Port: 8080");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -95,10 +98,9 @@ public class chessWindow extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addComponent(jLabel3)
                         .addComponent(jLabel7)
-                        .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jLabel4))
-                .addGap(0, 72, Short.MAX_VALUE))
+                .addGap(0, 75, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,9 +118,7 @@ public class chessWindow extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addGap(54, 54, 54)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 344, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 414, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addGap(99, 99, 99))
         );
@@ -170,26 +170,33 @@ public boolean isServerRunning() {
 }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String color = board.isWhiteChoose ? "Чёрные":"Белые";
-        JOptionPane.showMessageDialog(null, color + "выиграли", "Результаты партии", JOptionPane.INFORMATION_MESSAGE);
+        int confirm = JOptionPane.showConfirmDialog(null, "Вы уверены, что хотите сдаться?", "Подтверждение", JOptionPane.YES_NO_OPTION);
+    if (confirm == JOptionPane.YES_OPTION) {
         try {
-            server.SendSurrender();
+            if (server != null) {
+                server.SendSurrender();
+            }
+            YouSurrender(); // метод, который завершает партию для себя
         } catch (IOException ex) {
-            Logger.getLogger(chessWindow.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Ошибка при отправке команды сдачи: " + ex.getMessage());
         }
+    }
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
-    }//GEN-LAST:event_jButton2ActionPerformed
-
+    public void YouSurrender() {
+    String color = board.isWhiteChoose ? "Чёрные":"Белые";
+    JOptionPane.showMessageDialog(null, color + " выиграли", "Результаты партии", JOptionPane.INFORMATION_MESSAGE);
+        board.isGameOver = true;
+    }public void GameDrawn() {
+    JOptionPane.showMessageDialog(null, "Партия завершилась вничью.");
+    board.isGameOver = true;
+}
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 String isWhiteChoosen = args[1];
                 boolean isWhite = Boolean.parseBoolean(isWhiteChoosen);
-                try {
+                try {      
                     new chessWindow(args[0], isWhite).setVisible(true);
                 } catch (IOException ex) {
                     Logger.getLogger(chessWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -200,7 +207,6 @@ public boolean isServerRunning() {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

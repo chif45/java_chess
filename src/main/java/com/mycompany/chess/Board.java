@@ -26,7 +26,7 @@ public class Board extends JPanel{
     public int enPassantTile = -1;
     
     public boolean isWhiteToMove = true;
-    private boolean isGameOver = false;
+    public boolean isGameOver = false;
     public boolean isWhiteChoose;
     
     ChessServer server;
@@ -346,7 +346,7 @@ else {
             for (int coloumn = 0; coloumn < cols; coloumn++)
             {
                 g2d.setColor((coloumn + row) % 2 == 0 ?
-                Color.white : new Color(157,105,53));
+                Color.decode("#b4d8ab") : Color.decode("#43633c"));
                 g2d.fillRect(coloumn * titleSize, row * titleSize,titleSize,titleSize);
             }
         //рисуем ходы

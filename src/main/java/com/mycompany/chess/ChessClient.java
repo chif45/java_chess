@@ -24,7 +24,7 @@ public class ChessClient {
         this.isRunning = true;
     }
 
-    public String getNick(){
+public String getNick(){
         return NickServer;
     }
     
@@ -53,8 +53,7 @@ public void start() {
                     System.out.println("playerInfo was received");
                 });
             
-            receiveMoves();
-            receiveSurrender();
+            new Thread(this::receiveMessages).start();
         } catch (Exception e) {
             if (isRunning) {
                 SwingUtilities.invokeLater(() -> 
@@ -66,43 +65,45 @@ public void start() {
         }
     }).start();
 }
-    public void SendSurrender() throws IOException{
+public void SendSurrender() throws IOException{
         out.writeObject("Surrender");
         out.flush();
     }
-    private void receiveSurrender(){
-        String data = null;
-        try {
-            data = (String) in.readObject();
-        } catch (IOException ex) {
-            Logger.getLogger(ChessClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ChessClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if("Surrender".equals(data)){
-            board.TheOpponentSurrender();
-        }
-    }
-    private void receiveMoves() {
+private void receiveMessages() {
     try {
         while (isRunning) {
-            System.out.println("Waiting for the move..."); 
-            MoveData data = (MoveData) in.readObject();
-            System.out.println("Received move data: " + data);
-            if (!(data instanceof MoveData)) continue;
-            piece piece = board.getPiece(data.oldCol,data.oldRow);
-            move move = new move(board,piece,data.newCol,data.newRow);
-            
-            SwingUtilities.invokeLater(() -> {
-                synchronized(board) {
+            Object obj = in.readObject();
+            System.out.println("Получено сообщение: " + obj);
+
+            if (obj instanceof MoveData) {
+                MoveData data = (MoveData) obj;
+                piece piece = board.getPiece(data.oldCol, data.oldRow);
+                move move = new move(board, piece, data.newCol, data.newRow);
+
+                SwingUtilities.invokeLater(() -> {
+                    synchronized (board) {
                         try {
                             board.makeOponnentMove(move);
                         } catch (IOException ex) {
                             Logger.getLogger(ChessClient.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    board.repaint();
+                        board.repaint();
+                    }
+                });
+
+            } else if (obj instanceof String) {
+                String message = (String) obj;
+                if ("Surrender".equals(message)) {
+                    SwingUtilities.invokeLater(() -> {
+                        board.TheOpponentSurrender();
+                    });
+                } else {
+                    System.out.println("Неизвестная строка: " + message);
                 }
-            });
+            }
+            else {
+                System.out.println("Неизвестный тип объекта: " + obj.getClass());
+            }
         }
     } catch (EOFException e) {
         System.out.println("The server has gone down");
@@ -127,12 +128,12 @@ public synchronized void sendMove(move move) throws IOException {
     System.out.println("The move has been sent.");
 }
 
-    public void stop() {
+public void stop() {
         isRunning = false;
         closeConnection();
     }
 
-    private void closeConnection() {
+private void closeConnection() {
         try {
             if (in != null) in.close();
             if (out != null) out.close();

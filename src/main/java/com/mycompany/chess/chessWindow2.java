@@ -1,8 +1,11 @@
 package com.mycompany.chess;
 
+import java.awt.Color;
+
 public class chessWindow2 extends javax.swing.JFrame {
 
     public chessWindow2() {
+        this.getContentPane().setBackground(Color.decode("#cad5be"));
         initComponents();
     }
 
