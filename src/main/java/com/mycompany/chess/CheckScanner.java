@@ -101,7 +101,6 @@ public class CheckScanner {
         return p != null && !board.sameTeam(p,k) && p.name.equals("King");
     }
     
-    
     private boolean hitByPawn(int col, int row, piece king, int kingCol, int kingRow){
         int  colorVal = king.isWhite ? -1 : 1;
         return checkPawn(board.getPiece(kingCol + 1, kingRow + colorVal), king, col, row)||
@@ -120,9 +119,15 @@ public class CheckScanner {
                 for(int row = 0; row < board.rows; row++){
                      for(int col = 0; col < board.cols; col++){
                          move move = new move(board, piece, col, row);
-                         if(board.isValidMove(move)){
+                         if(board.onePC){
+                         if(board.isValidMoveonOnePC(move)){
                              return false;
                          }
+                         }
+                         else{
+                         if(board.isValidMove(move)){
+                             return false;
+                         }}
                      }
                 }
             }

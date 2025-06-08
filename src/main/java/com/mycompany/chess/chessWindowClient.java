@@ -11,7 +11,7 @@ public class chessWindowClient extends javax.swing.JFrame {
     public chessWindowClient(String userName, String IP, String Port) throws IOException {
         this.getContentPane().setBackground(Color.decode("#cad5be"));
         int intPort = Integer.parseInt(Port);
-        board = new Board(isWhite);
+        board = new Board(isWhite, false);
 
         
         client = new ChessClient(board, IP, intPort) {

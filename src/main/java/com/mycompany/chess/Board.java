@@ -20,7 +20,7 @@ public class Board extends JPanel{
     
     Input input = new Input(this);
 
-    
+    boolean onePC = false;
     public CheckScanner checkScanner = new CheckScanner(this);
     
     public int enPassantTile = -1;
@@ -33,13 +33,14 @@ public class Board extends JPanel{
     ChessClient client;
     
 
-    public Board(boolean isWhite)
+    public Board(boolean isWhite, boolean onePC)
     {
         isWhiteChoose = isWhite;
         this.setPreferredSize(new Dimension(cols * titleSize, rows * titleSize));
         this.addMouseListener(input);
         this.addMouseMotionListener(input);
         addPieces(isWhiteChoose);
+        this.onePC = onePC;
     }
     public void setClient(ChessClient client){
         this.client = client;
@@ -185,6 +186,29 @@ else {
             
         return true;
     }
+    public boolean isValidMoveonOnePC(move move){
+        
+        if(isGameOver){
+            return false;
+        }
+        if(move.piece.isWhite != isWhiteToMove){
+            return false;
+        }
+        if(sameTeam(move.piece, move.capture)){
+            return false;
+        }
+        if(!move.piece.isValidMovement(move.newCol, move.newRow)){
+            return false;
+        }
+        if(move.piece.moveCollidesWithPiece(move.newCol, move.newRow)){
+            return false;
+        }
+        if(checkScanner.isKingChecked(move)){
+            return false;
+        }
+            
+        return true;
+    }
     public boolean sameTeam(piece p1, piece p2){
         if(p1 == null || p2 == null){
             return false;
@@ -325,10 +349,10 @@ else {
                 }else{
                     JOptionPane.showMessageDialog(null, "Белые выиграли", "Результаты партии", JOptionPane.INFORMATION_MESSAGE);
                 } 
-        }
-        }
         if(!isGameOver){
             isGameOver = true;
+        }
+        }
         }
     }
      protected void paintComponent(Graphics figure)
@@ -347,11 +371,16 @@ else {
         if (selectedPiece != null)
         for (int row = 0; row < rows; row++)
             for (int coloumn = 0; coloumn < cols; coloumn++){
+                if (!onePC){
                 if (isValidMove(new move(this,selectedPiece,coloumn,row))){
                     g2d.setColor(new Color(68,180,57,190));
                     g2d.fillRect(coloumn * titleSize,row * titleSize,titleSize,titleSize);
             }
-            
+                }else{ 
+                    if(isValidMoveonOnePC(new move(this,selectedPiece,coloumn,row))){
+                    g2d.setColor(new Color(68,180,57,190));
+                    g2d.fillRect(coloumn * titleSize,row * titleSize,titleSize,titleSize);
+                }}
             }
         //рисуем фигуры
         for (piece Piece : pieceList)

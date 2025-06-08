@@ -7,13 +7,15 @@ public class chessWindow2 extends javax.swing.JFrame {
     public chessWindow2() {
         this.getContentPane().setBackground(Color.decode("#cad5be"));
         initComponents();
+        
+        
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new Board(true);
+        jPanel1 = new Board(true, true);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 

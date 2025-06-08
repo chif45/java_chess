@@ -27,7 +27,6 @@ public class ChessClient {
 public String getNick(){
         return NickServer;
     }
-    
  public void onPlayerInfoReceived(PlayerInfo info) {
         // Пустая реализация по умолчанию
     }
@@ -110,19 +109,12 @@ private void receiveMessages() {
     } catch (Exception e) {
         if (isRunning) {
             System.err.println("Connection error:" + e.getMessage());
-            if(!board.isGameOver){
-            SwingUtilities.invokeLater(() -> {
-                        board.TheOpponentSurrender();
-            });
-        }
             
         }
     } finally {
         closeConnection();
     }
 }
-
-
 public synchronized void sendMove(move move) throws IOException {
     if (out == null) {
         throw new IOException("Connection lost or not established!");
@@ -133,12 +125,10 @@ public synchronized void sendMove(move move) throws IOException {
     out.flush();
     System.out.println("The move has been sent.");
 }
-
 public void stop() {
         isRunning = false;
         closeConnection();
     }
-
 private void closeConnection() {
         try {
             if (in != null) in.close();

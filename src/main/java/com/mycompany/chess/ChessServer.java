@@ -105,11 +105,6 @@ public class ChessServer {
     } catch (Exception e) {
         if (isRunning) {
             System.err.println("Connection error:" + e.getMessage());
-                        if(!board.isGameOver){
-            SwingUtilities.invokeLater(() -> {
-                        board.TheOpponentSurrender();
-            });
-        }
         }
     } finally {
         closeConnection();

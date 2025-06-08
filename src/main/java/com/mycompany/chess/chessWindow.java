@@ -16,7 +16,7 @@ public class chessWindow extends javax.swing.JFrame {
     public chessWindow(String userName, Boolean isWhiteChoosen) throws IOException {
         this.getContentPane().setBackground(Color.decode("#cad5be"));
         isWhite = isWhiteChoosen;
-        board = new Board(isWhite);
+        board = new Board(isWhite,false);
         board.isGameOver = true;
         initComponents();
         jLabel7.setText("Вы: " + userName);

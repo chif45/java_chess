@@ -37,8 +37,8 @@ public class Input extends MouseAdapter {
        
        if(board.selectedPiece != null){
            move move = new move(board, board.selectedPiece, col, row);
-           
-           if (board.isValidMove(move)){
+           if (board.onePC){
+           if (board.isValidMoveonOnePC(move)){
                try {
                    board.makeMove(move);
                } catch (IOException ex) {
@@ -49,9 +49,21 @@ public class Input extends MouseAdapter {
                board.selectedPiece.yPosition = board.selectedPiece.row * board.titleSize;
            }
            
-       }
+       }else{
+               if (board.isValidMove(move)){
+               try {
+                   board.makeMove(move);
+               } catch (IOException ex) {
+                   Logger.getLogger(Input.class.getName()).log(Level.SEVERE, null, ex);
+               }
+           }else{
+               board.selectedPiece.xPosition = board.selectedPiece.coloumn * board.titleSize;
+               board.selectedPiece.yPosition = board.selectedPiece.row * board.titleSize;
+           }
+           }
        board.selectedPiece = null;
        board.repaint();
+    }
     }
 
     @Override
