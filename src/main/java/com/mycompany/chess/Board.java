@@ -54,10 +54,7 @@ public class Board extends JPanel{
                 return piece;
             }
         }
-        
-        
         return null;
-    
     }
     
     public void makeMove(move move) throws IOException{
@@ -92,8 +89,11 @@ else {
        
     }
     public void TheOpponentSurrender(){
-        String color = isWhiteChoose ? "Чёрные":"Белые";
+        String color = isWhiteChoose ? "Белые ":"Чёрные ";
         JOptionPane.showMessageDialog(null, color + "выиграли", "Результаты партии", JOptionPane.INFORMATION_MESSAGE);
+        if(!isGameOver){
+            isGameOver = true;
+        }
     }
     public void makeOponnentMove(move move) throws IOException{
         if (move.piece.name.equals("Pawn")){
@@ -128,8 +128,7 @@ else {
             }
             rook.xPosition = rook.coloumn * titleSize;
         }
-    }
-    
+    } 
     public void movePawn(move move){
         
         //на проходе
@@ -152,17 +151,14 @@ else {
             promotePawn(move);
         }
 
-    }
-    
+    } 
     public void promotePawn(move move){
         pieceList.add(new Queen(this,move.newCol, move.newRow, move.piece.isWhite));
         capture(move.piece);
     }
-    
     public void capture(piece piece){
         pieceList.remove(piece);
     }
-    
     public boolean isValidMove(move move){
         
         if(isGameOver){
@@ -189,7 +185,6 @@ else {
             
         return true;
     }
-    
     public boolean sameTeam(piece p1, piece p2){
         if(p1 == null || p2 == null){
             return false;
@@ -199,8 +194,7 @@ else {
     public int getTileNum(int col, int row){
         return row * rows + col;
     
-    }
-    
+    }  
     piece findKing(boolean isWhite){
         for (piece piece : pieceList){
             if (isWhite == piece.isWhite && piece.name.equals("King")){
@@ -209,7 +203,6 @@ else {
         }
         return null;
     }
-    
     public void addPieces(Boolean isWhite)
     {
         if(isWhite){
@@ -321,8 +314,7 @@ else {
         // white
         pieceList.add(new Queen(this, 3, 0, true));  
         }
-    }
-    
+    }  
     private void updateGameState(){
         piece king = findKing(isWhiteToMove);
         
@@ -335,8 +327,10 @@ else {
                 } 
         }
         }
+        if(!isGameOver){
+            isGameOver = true;
+        }
     }
-    
      protected void paintComponent(Graphics figure)
     {
         Graphics2D g2d = (Graphics2D) figure;
@@ -365,18 +359,4 @@ else {
            Piece.paint(g2d); 
         }
     }
-     // Синхронизированный метод для смены хода
-public synchronized void switchTurn() {
-    isWhiteToMove = !isWhiteToMove;
-}
-
-// Метод для сброса позиции выбранной фигуры
-public synchronized void resetSelectedPiecePosition() {
-    if (selectedPiece != null) {
-        selectedPiece.xPosition = selectedPiece.coloumn * titleSize;
-        selectedPiece.yPosition = selectedPiece.row * titleSize;
-        selectedPiece = null;
-    }
-}
-
 }

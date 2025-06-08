@@ -44,14 +44,11 @@ public class chessWindow2 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    boolean isWhite;
 
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                String isWhiteChoosen = args[1];
-                boolean isWhite = Boolean.parseBoolean(isWhiteChoosen);
                 new chessWindow2().setVisible(true);
             }
         });

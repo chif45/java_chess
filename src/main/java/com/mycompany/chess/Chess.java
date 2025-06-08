@@ -205,13 +205,23 @@ public class Chess extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         chessWindowClient gameWindow = null;
+        if (jTextField1.getText().trim().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Пожалуйста, введите имя.", "Ошибка", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+        else if(jTextField2.getText().trim().isEmpty()){
+            javax.swing.JOptionPane.showMessageDialog(this, "Пожалуйста, введите IP.", "Ошибка", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }  
+        else if(jTextField2.getText().trim().isEmpty()){
+            javax.swing.JOptionPane.showMessageDialog(this, "Пожалуйста, введите Port.", "Ошибка", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }else{
         try {
             gameWindow = new chessWindowClient(jTextField1.getText(),jTextField2.getText(),jTextField3.getText());
         } catch (IOException ex) {
             Logger.getLogger(Chess.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
         gameWindow.setVisible(true);
-        this.dispose(); 
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public static void main(String args[]) {
